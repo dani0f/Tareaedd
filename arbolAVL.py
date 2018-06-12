@@ -33,43 +33,42 @@ class Nodo:
 			#print("sigo con derecha__ +1")
 			b=self.comparador(con+1,A.right)
 			#print(a,b,"fin")
-			if(a<b):
+			if(a<=b):
 				return(b)
 			if(a>b):
 				return(a)
 		else:
 			if(R>L):
-				#print("sigo con derecha +1")
+			#	print("sigo con derecha +1")
 				con=con+1
-				#print(con)
+			#	print(con)
 				R=self.comparador(con,A.right)
-				#print("contador R",R)
+			#	print("contador R",R)
 				return(R)
 			else:
-				#print("sigo con izquierda +1")
+			#	print("sigo con izquierda +1")
 				con=con+1
-				#print(con)
+			#	print(con)
 				L=self.comparador(con,A.left)
-				#print("contador L",L)
+			#	print("contador L",L)
 				return(L)
 	def _factor(self):
-		if(self.es_hoja()==True):
+		if(self.right is None and self.left is None):
 			self.factor=0
-			r=l=0
+			return(0)
 		else:
 			if(self.right is not None):
-				r=self.comparador(0,A.right)
+				r=self.comparador(0,self.right)
 				r=r+1
 			else:
 				r=0
 			if(self.left is not None):
-				l=self.comparador(0,A.left)
+				l=self.comparador(0,self.left)
 				l=l+1
 			else:
 				l=0
 		self.factor=l-r
-		print("valor de la derecha es",r)
-		print("valor de la izquierda es",l)
+		#print(self.get_nombre(),"izq=",l,"der=",r)
 		return(l-r)
 	def _factor_R(self,contador_r,nodo):
 		if(nodo.right is not None):
@@ -86,10 +85,49 @@ class Nodo:
 class Avl:
 	def __init__(self):
 		self.root=None
-	def balanceo(self,nodo):#retorna None si esta balanceada si no entrega el nodo desbalanceado
-		# debe recorrer todo el arbol en busca de un +-2 
-		# lo recorre en order
-		print("jrio")
+	def _balanceo(self,nodo):
+		if(nodo==None):
+			return(None)
+		else:
+			factor=nodo.get_factor()
+			if(factor==2 or factor==-2):
+				print(factor,nodo.get_nombre())
+				return(nodo)
+			else:
+				a=self._balanceo(nodo.left)
+				b=self._balanceo(nodo.right)
+		if(a is not None):
+			return(a)
+		if(b is not None):
+			return(b)		
+		return(None)
+	def in_order(self,nodo):
+		if nodo==None:
+			pass
+		else:
+			self.in_order(nodo.left)
+			print(nodo.get_nom(),nodo.get_ape(),nodo.get_tel(),nodo.get_mail())
+			self.in_order(nodo.right)
+	def in_order_balanced(self,nodo):
+		if nodo==None:
+			pass
+		else:
+			self.in_order_balanced(nodo.left)
+			nodo._factor()
+			self.in_order_balanced(nodo.right)
+	def tipo_rotacion(self,nodo):
+		if(nodo.get_factor()==-2):
+			nod=nodo.right.get_factor()
+			if(nod==-1):
+				return("L")
+			if(nod==1):
+				return("RL")
+		if(nodo.get_factor()==2):
+			nod=nodo.left.get_factor()
+			if(nod==-1):
+				return("LR")
+			if(nod==1):
+				return("R")
 	
 #ARBOL RR
 # A=Nodo("A")
@@ -104,19 +142,40 @@ class Avl:
 # A._factor(A)
 #ARBOL NORMAL
 A=Nodo("A")
-B2=Nodo("B2")
+B1=Nodo("B1")
 B=Nodo("B")
+C1=Nodo("C1")
 C2=Nodo("C2")
-C3=Nodo("C3")
 C=Nodo("C")
 D=Nodo("D")
 A.right=B
-A.left=B2
-B.left=C2
-B.right=C
-C2.right=D
-A._factor()
-print(A.get_factor())
+A.left=B1
+B.left=C
+C.left=D
+B1.left=C1
+B1.right=C2
+# A._factor()
+# print("A",A.get_factor())
+# B1._factor()
+# print("b1",B1.get_factor())
+# B._factor()
+# print("B",B.get_factor())
+# C._factor()
+# print("C",C.get_factor())
+# C1._factor()
+# print("c1",C1.get_factor())
+# D._factor()
+# print("D",D.get_factor())
+avl=Avl()
+avl.in_order_balanced(A)
+a=avl._balanceo(A)
+if(a==None):
+	print("es none")
+else:
+	print(a.get_nombre())
+rot=avl.tipo_rotacion(a)
+print(rot)
+
 
 
 
