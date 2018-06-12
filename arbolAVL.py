@@ -101,13 +101,6 @@ class Avl:
 		if(b is not None):
 			return(b)		
 		return(None)
-	def in_order(self,nodo):
-		if nodo==None:
-			pass
-		else:
-			self.in_order(nodo.left)
-			print(nodo.get_nom(),nodo.get_ape(),nodo.get_tel(),nodo.get_mail())
-			self.in_order(nodo.right)
 	def in_order_balanced(self,nodo):
 		if nodo==None:
 			pass
@@ -128,19 +121,52 @@ class Avl:
 				return("LR")
 			if(nod==1):
 				return("R")
-	
-#ARBOL RR
-# A=Nodo("A")
-# B2=Nodo("B2")
-# B=Nodo("B")
-# C=Nodo("C")
-# D=Nodo("D")
-# A.right=B
-# A.left=B2
-# B.right=C
-# C.right=D
-# A._factor(A)
-#ARBOL NORMAL
+	def in_order(self,nodo):
+		if nodo==None:
+			pass
+		else:
+			self.in_order(nodo.left)
+			print(nodo.get_nom(),nodo.get_ape(),nodo.get_tel(),nodo.get_mail())
+			self.in_order(nodo.right)
+	def balanceo(self):
+		if(self.root is None):
+			return False
+		else:
+			ver=self._balanceo(self.root)
+			if(ver==None):
+				return(False)
+			else:
+				return(ver)
+	def balanceo_1(self,nodo):
+
+		if(nodo is None):
+			return False
+		ver=self._balanceo(nodo)
+		if(ver==None):
+			print("False")
+			return(False)
+		else:
+			print("true")
+			return(ver)
+	def rotacion_l(self,nodo):
+		B=nodo
+		A=B.parent
+		C=B.right
+		D=C.right
+		A.right=C
+		C.left=B
+		C.right=D
+		C.parent=A
+		B.parent=C
+		D.parent=c			
+	def rotacion_r(self,nodo,parent):
+		B=nodo
+		A=parent
+		C=B.left
+		D=C.left
+		A.right=C
+		C.right=B
+		C.left=D
 A=Nodo("A")
 B1=Nodo("B1")
 B=Nodo("B")
@@ -154,28 +180,12 @@ B.left=C
 C.left=D
 B1.left=C1
 B1.right=C2
-# A._factor()
-# print("A",A.get_factor())
-# B1._factor()
-# print("b1",B1.get_factor())
-# B._factor()
-# print("B",B.get_factor())
-# C._factor()
-# print("C",C.get_factor())
-# C1._factor()
-# print("c1",C1.get_factor())
-# D._factor()
-# print("D",D.get_factor())
 avl=Avl()
 avl.in_order_balanced(A)
-a=avl._balanceo(A)
-if(a==None):
-	print("es none")
-else:
-	print(a.get_nombre())
-rot=avl.tipo_rotacion(a)
-print(rot)
-
+ver=avl.balanceo_1(A)
+print(avl.tipo_rotacion(ver))
+avl.rotacion_r(ver,A)
+avl.in_order(A)
 
 
 
