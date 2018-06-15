@@ -85,41 +85,40 @@ class Nodo:
 class Avl:
 	def __init__(self):
 		self.root=None
-	def empty():
+	def empty(self):
 		if(self.root==None):
 			return(True)
 		return(False)
-	def add(self,dato):
-		if(self.root is None):
-			nodo=Nodo(dato)
-			self.root=nodo
-		else:	
-			self._add(dato,self.root)
-	def add(self,dato):
+	def get_root(self):
+		return(self.root)
+	def add(self,nombre):
 		if(self.empty()):
+			nodo=Nodo(nombre)
+			self.root=nodo
+			print("se agrega en la raiz")
 			return(False)
 		else:
-			self._add(dato,self.root)
+			self._add(nombre,self.root)
 			self.in_order_balanced(self.root)
-			nodo=self._balanceo(self.root)
+			nodo=self.is_balanced(self.root)
 			if(nodo==None):
 				return(False)
 			else:
 				self._rotacion(nodo)#mando a rotar
 				return(True)
-	def _add(self,dato,nodo):
-		if(dato<nodo.get_dato()):
+	def _add(self,nombre,nodo):
+		if(nombre<nodo.get_nombre()):
 			if(nodo.left!=None):
-				self.add(dato,nodo.left)
+				self._add(nombre,nodo.left)
 			else:
-				nodo.left=Nodo(dato)
+				nodo.left=Nodo(nombre)
 				nodo.left.parent=nodo
 		else:
-			if(hoja.right!=None):
-				self.add(dato,hoja.right)
+			if(nodo.right!=None):
+				self._add(nombre,nodo.right)
 			else:
-				hoja.right=Hoja(dato)
-				hoja.right.parent=hoja
+				nodo.right=Nodo(nombre)
+				nodo.right.parent=nodo
 	def _balanceo(self,nodo):
 		if(nodo==None):
 			return(None)
@@ -172,24 +171,14 @@ class Avl:
 			pass
 		else:
 			self.in_order(nodo.left)
-			#print(nodo.get_nombre())
+			print(nodo.get_nombre())
 			self.in_order(nodo.right)
-	def balanceo(self):
-		if(self.root is None):
-			return False
-		else:
-			ver=self._balanceo(self.root)
-			if(ver==None):
-				return(False)
-			else:
-				return(ver)
-	def balanceo_1(self,nodo):
-
+	def is_balanced(self,nodo):
 		if(nodo is None):
-			return False
+			return None
 		ver=self._balanceo(nodo)
 		if(ver==None):
-			return(False)
+			return(None)
 		else:
 			if(ver.right is not None):
 				if(ver.right.get_factor()==2 or ver.right.get_factor()==-2):
@@ -198,7 +187,6 @@ class Avl:
 				if(ver.left.get_factor()==2 or ver.left.get_factor()==-2):
 					ver=ver.left
 			return(ver)
-
 	def rotacion_L(self,nodo,parent):
 		print("rotacion a L")
 		pass	
@@ -226,30 +214,14 @@ class Avl:
 		print("rotacion a LR")
 	def rotacion_RL(self,nodo,parent):
 		print("rotacion a RL")
-A=Nodo("A")
-B1=Nodo("B1")
-B=Nodo("B")
-C1=Nodo("C1")
-C2=Nodo("C2")
-C=Nodo("C")
-D=Nodo("D")
-A.right=B
-A.left=B1
-B1.left=C
-C.left=D
-B.parent=A
-B1.parent=A
-C.parent=B1
-D.parent=C
 avl=Avl()
-avl.in_order_balanced(A)
-ver=avl.balanceo_1(A)
-print("Nodo desbalanceado encontrado",ver.get_nombre())
-avl.pre_order(A)
-print("----------")
-print("Aplicando rotacion tipo",avl._rotacion(ver))
-avl.pre_order(A)
-
+avl.add(4)
+avl.add(5)
+avl.add(3)
+avl.add(2)
+avl.pre_order(avl.get_root())
+avl.add(1)
+avl.pre_order(avl.get_root())
 
 
 
