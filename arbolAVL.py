@@ -159,7 +159,7 @@ class Avl:
 				self.rotacion_RL(nodo,nodo.get_parent())
 				return("RL")
 		if(nodo.get_factor()>0):
-			nod=nodo.left.get_factor()
+			nod_left=nodo.left.get_factor()
 			if(nod_left<0):
 				self.rotacion_LR(nodo,nodo.get_parent())
 				return("LR")
@@ -234,6 +234,17 @@ class Avl:
 		B.parent=C
 	def rotacion_LR(self,nodo,parent):
 		print("rotacion a LR desde ", nodo.get_nombre())
+		B=nodo
+		A=parent
+		C=B.left
+		D=C.right
+		D.left=C #primero copio C a la derecha de D
+		B.left=D
+		C.right=None
+		D.parent=B
+		C.parent=D
+		self.rotacion_R(B,A)#lo mando a rotacion hacia la izquierda
+		#print("rotacion a RL terminada")
 	def rotacion_RL(self,nodo,parent):
 		print("rotacion a RL desde ", nodo.get_nombre())
 		B=nodo
@@ -269,11 +280,11 @@ class Avl:
 			self.post_order(nodo.right)
 			print(nodo.get_nombre())
 avl=Avl()
-avl.add(20)
-avl.add(6)
-avl.add(22)
 avl.add(10)
-avl.add(8)
+avl.add(5)
+avl.add(12)
+avl.add(3)
+avl.add(4)
 avl.post_order(avl.get_root())
 
 
