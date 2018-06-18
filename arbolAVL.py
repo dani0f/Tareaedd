@@ -105,7 +105,14 @@ class Avl:
 				return(False)
 			else:
 				self._rotacion(nodo)#mando a rotar
-				return(True)
+				self.in_order_balanced(self.root)
+				ver=self.is_balanced(self.root)
+				if(ver==None):
+					print("rebalanceado con exito")
+					return(True)
+				else:
+					print("error")
+					return(False)
 	def _add(self,nombre,nodo):
 		if(nombre<nodo.get_nombre()):
 			if(nodo.left!=None):
@@ -143,36 +150,22 @@ class Avl:
 			nodo._factor()
 			self.in_order_balanced(nodo.right)
 	def _rotacion(self,nodo):
-		if(nodo.get_factor()==-2):
-			nod=nodo.right.get_factor()
-			if(nod==-1):
+		if(nodo.get_factor()<0):
+			nodo_right=nodo.right.get_factor()
+			if(nodo_right<0):
 				self.rotacion_L(nodo,nodo.get_parent())
 				return("L")
-			if(nod==1):
+			if(nodo_right>0):
 				self.rotacion_RL(nodo,nodo.get_parent())
 				return("RL")
-		if(nodo.get_factor()==2):
+		if(nodo.get_factor()>0):
 			nod=nodo.left.get_factor()
-			if(nod==-1):
+			if(nod_left<0):
 				self.rotacion_LR(nodo,nodo.get_parent())
 				return("LR")
-			if(nod==1):
+			if(nod_left>0):
 				self.rotacion_R(nodo,nodo.get_parent())
 				return("R")
-	def pre_order(self,nodo):
-		if nodo==None:
-			pass
-		else:
-			print(nodo.get_nombre())
-			self.pre_order(nodo.left)
-			self.pre_order(nodo.right)
-	def in_order(self,nodo):
-		if nodo==None:
-			pass
-		else:
-			self.in_order(nodo.left)
-			print(nodo.get_nombre())
-			self.in_order(nodo.right)
 	def is_balanced(self,nodo):
 		if(nodo is None):
 			return None
@@ -187,11 +180,40 @@ class Avl:
 				if(ver.left.get_factor()==2 or ver.left.get_factor()==-2):
 					ver=ver.left
 			return(ver)
+	def _find(self,nodo,dato):
+		if(nodo==None):
+			return nodo
+		elif dato == nodo.get_dato():
+			return nodo
+		elif dato<nodo.get_dato() and nodo.left!=None:
+			return self._find(dato,nodo.left)
+		elif dato>nodo.get_dato() and nodo.right!=None:
+			return self._find(dato,nodo.right)
+	def find(self,dato):
+		if self.empty():
+			return None
+		else:
+			return self._find(dato,self.root)
 	def rotacion_L(self,nodo,parent):
-		print("rotacion a L")
-		pass	
+		print("rotacion a L desde ", nodo.get_nombre())
+		B=nodo 
+		A=parent
+		C=B.right
+		B.right=None
+		C.left=B
+		#caso 0 b es una raiz y no tiene parent
+		if(A is None):
+			print(" se cambia la raiz")
+		#caso 1 p.factor<0 
+		if(A.get_factor()<0):
+			A.right=C
+		#caso 2 p.factor>0 
+		if(A.get_factor()>0):
+			A.left=C
+		C.parent=A
+		B.parent=C
 	def rotacion_R(self,nodo,parent):
-		print("rotacion a R")
+		print("rotacion a R desde ", nodo.get_nombre())
 		B=nodo 
 		A=parent
 		C=B.left
@@ -211,17 +233,48 @@ class Avl:
 		C.parent=A
 		B.parent=C
 	def rotacion_LR(self,nodo,parent):
-		print("rotacion a LR")
+		print("rotacion a LR desde ", nodo.get_nombre())
 	def rotacion_RL(self,nodo,parent):
-		print("rotacion a RL")
+		print("rotacion a RL desde ", nodo.get_nombre())
+		B=nodo
+		A=parent
+		C=B.right
+		D=C.left
+		D.right=C #primero copio C a la derecha de D
+		B.right=D
+		C.left=None
+		D.parent=B
+		C.parent=D
+		self.rotacion_L(B,A)#lo mando a rotacion hacia la izquierda
+		#print("rotacion a RL terminada")
+	def pre_order(self,nodo):
+		if nodo==None:
+			pass
+		else:
+			print(nodo.get_nombre())
+			self.pre_order(nodo.left)
+			self.pre_order(nodo.right)
+	def in_order(self,nodo):
+		if nodo==None:
+			pass
+		else:
+			self.in_order(nodo.left)
+			print(nodo.get_nombre())
+			self.in_order(nodo.right)
+	def post_order(self,nodo):
+		if nodo==None:
+			pass
+		else:
+			self.post_order(nodo.left)
+			self.post_order(nodo.right)
+			print(nodo.get_nombre())
 avl=Avl()
-avl.add(4)
-avl.add(5)
-avl.add(3)
-avl.add(2)
-avl.pre_order(avl.get_root())
-avl.add(1)
-avl.pre_order(avl.get_root())
+avl.add(20)
+avl.add(6)
+avl.add(22)
+avl.add(10)
+avl.add(8)
+avl.post_order(avl.get_root())
 
 
 
