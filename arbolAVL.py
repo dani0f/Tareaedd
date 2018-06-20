@@ -98,6 +98,9 @@ class Avl:
 			#print("se agrega en la raiz")
 			return(False)
 		else:
+			if(self.find(nombre) is not None):
+				print("contacto existente")
+				return("True")
 			self._add(nombre,self.root)
 			self.in_order_balanced(self.root)
 			nodo=self.is_balanced(self.root)
@@ -180,20 +183,20 @@ class Avl:
 				if(ver.left.get_factor()==2 or ver.left.get_factor()==-2):
 					ver=ver.left
 			return(ver)
-	def _find(self,nodo,dato):
+	def _find(self,nombre,nodo):
 		if(nodo==None):
 			return nodo
-		elif dato == nodo.get_dato():
+		elif nombre == nodo.get_nombre():
 			return nodo
-		elif dato<nodo.get_dato() and nodo.left!=None:
-			return self._find(dato,nodo.left)
-		elif dato>nodo.get_dato() and nodo.right!=None:
-			return self._find(dato,nodo.right)
-	def find(self,dato):
+		elif nombre<nodo.get_nombre() and nodo.left!=None:
+			return self._find(nombre,nodo.left)
+		elif nombre>nodo.get_nombre() and nodo.right!=None:
+			return self._find(nombre,nodo.right)
+	def find(self,nombre):
 		if self.empty():
 			return None
 		else:
-			return self._find(dato,self.root)
+			return self._find(nombre,self.root)
 	def rotacion_L(self,nodo,parent):
 		#print("rotacion a L desde ", nodo.get_nombre())
 		B=nodo 
@@ -310,7 +313,22 @@ avl.add(29)
 avl.add(5)
 avl.add(54)
 avl.add(17)
-avl.post_order(avl.get_root())
+avl.add(17)
+avl.add(27)
+avl.add(15)
+avl.add(29)
+avl.add(5)
+avl.add(54)
+avl.add(17)
+avl.add(17)
+avl.add(73)
+
+avl.in_order(avl.get_root())
+bool=avl.find(17)
+if(bool is not None):
+	print("nombre",bool.parent.get_nombre())
+else:
+	print("no encontrado")
 #avl.pre_order(avl.get_root())
 
 
