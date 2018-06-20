@@ -95,7 +95,7 @@ class Avl:
 		if(self.empty()):
 			nodo=Nodo(nombre)
 			self.root=nodo
-			print("se agrega en la raiz")
+			#print("se agrega en la raiz")
 			return(False)
 		else:
 			self._add(nombre,self.root)
@@ -195,15 +195,26 @@ class Avl:
 		else:
 			return self._find(dato,self.root)
 	def rotacion_L(self,nodo,parent):
-		print("rotacion a L desde ", nodo.get_nombre())
+		#print("rotacion a L desde ", nodo.get_nombre())
 		B=nodo 
 		A=parent
 		C=B.right
 		B.right=None
-		C.left=B
 		#caso 0 b es una raiz y no tiene parent
 		if(A is None):
-			print(" se cambia la raiz")
+		#	print("se cambia la raiz")	
+			D1=C.left
+			
+			C.left=B
+			B.right=D1
+			self.root=C
+			C.parent=None
+			B.parent=C
+			if(D1 is not None):
+		#		print("--con hijos")
+				D1.parent=B	
+			return
+		C.left=B	
 		#caso 1 p.factor<0 
 		if(A.get_factor()<0):
 			A.right=C
@@ -213,27 +224,37 @@ class Avl:
 		C.parent=A
 		B.parent=C
 	def rotacion_R(self,nodo,parent):
-		print("rotacion a R desde ", nodo.get_nombre())
+		#print("rotacion a R desde ", nodo.get_nombre())
 		B=nodo 
 		A=parent
 		C=B.left
 		B.left=None
-		C.right=B
 		#caso 0 b es una raiz y no tiene parent
 		if(A is None):
-			print(" se cambia la raiz")
+			#print("se cambia la raiz")	
+			D1=C.right
+			C.right=B
+			B.left=D1
+			self.root=C
+			C.parent=None
+			B.parent=C
+			if(D1 is not None):
+			#	print("--con hijos")
+				D1.parent=B
+			return
+		C.right=B	
 		#caso 1 p.factor<0 
 		if(A.get_factor()<0):
 			A.right=C
-			print("caso 1")
+			#print("caso 1")
 		#caso 2 p.factor>0 
 		if(A.get_factor()>0):
 			A.left=C
-			print("caso 2")
+			#print("caso 2")
 		C.parent=A
 		B.parent=C
 	def rotacion_LR(self,nodo,parent):
-		print("rotacion a LR desde ", nodo.get_nombre())
+		#print("rotacion a LR desde ", nodo.get_nombre())
 		B=nodo
 		A=parent
 		C=B.left
@@ -246,7 +267,7 @@ class Avl:
 		self.rotacion_R(B,A)#lo mando a rotacion hacia la izquierda
 		#print("rotacion a RL terminada")
 	def rotacion_RL(self,nodo,parent):
-		print("rotacion a RL desde ", nodo.get_nombre())
+		#print("rotacion a RL desde ", nodo.get_nombre())
 		B=nodo
 		A=parent
 		C=B.right
@@ -280,12 +301,17 @@ class Avl:
 			self.post_order(nodo.right)
 			print(nodo.get_nombre())
 avl=Avl()
-avl.add(10)
+avl.add(30)
+avl.add(25)
+avl.add(40)
+avl.add(27)
+avl.add(15)
+avl.add(29)
 avl.add(5)
-avl.add(12)
-avl.add(3)
-avl.add(4)
+avl.add(54)
+avl.add(17)
 avl.post_order(avl.get_root())
+#avl.pre_order(avl.get_root())
 
 
 
