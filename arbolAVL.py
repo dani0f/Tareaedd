@@ -1,6 +1,9 @@
-class Nodo:
-	def __init__(self,nombre):
-		self.nombre=nombre
+class Nodo_A:
+	def __init__(self,nom,ape,tel,mail):
+		self.nombre=nom
+		self.apellido=ape
+		self.telefono=tel
+		self.mail=mail
 		self.right=None
 		self.left=None
 		self.parent=None
@@ -11,6 +14,12 @@ class Nodo:
 		return(self.left)
 	def get_nombre(self):
 		return(self.nombre)
+	def get_apellido(self):
+		return(self.apellido)
+	def get_telefono(self):
+		return(self.telefono)
+	def get_mail(self):
+		return(self.mail)
 	def get_parent(self):
 		return(self.parent)
 	def get_factor(self):
@@ -20,38 +29,39 @@ class Nodo:
 			return(True)
 		else:
 			return(False)
-	def comparador(self,con,A):#Retorna profundidad mayor
+	def comparador(self,con,A):
 		if(A.right is None and A.left is None):
-			#print("es una hoja")
 			return(con)
 		L=self._factor_L(0,A)
 		R=self._factor_R(0,A)
 		if(R==L):
-			#print("sigo con izquierda__ +1")
 			a=self.comparador(con+1,A.left)
-			#print("me devuelvo")
-			#print("sigo con derecha__ +1")
 			b=self.comparador(con+1,A.right)
-			#print(a,b,"fin")
 			if(a<=b):
 				return(b)
 			if(a>b):
 				return(a)
 		else:
 			if(R>L):
-			#	print("sigo con derecha +1")
 				con=con+1
-			#	print(con)
 				R=self.comparador(con,A.right)
-			#	print("contador R",R)
 				return(R)
 			else:
-			#	print("sigo con izquierda +1")
 				con=con+1
-			#	print(con)
 				L=self.comparador(con,A.left)
-			#	print("contador L",L)
 				return(L)
+	def _factor_R(self,contador_r,nodo):
+		if(nodo.right is not None):
+			contador_r=contador_r+1
+			return(self._factor_R(contador_r,nodo.right))
+		else:
+			return(contador_r)
+	def _factor_L(self,contador_l,nodo):
+		if(nodo.left is not None):
+			contador_l=contador_l+1
+			return(self._factor_L(contador_l,nodo.left))
+		else:
+			return(contador_l)	
 	def _factor(self):
 		if(self.right is None and self.left is None):
 			self.factor=0
@@ -68,21 +78,8 @@ class Nodo:
 			else:
 				l=0
 		self.factor=l-r
-		#print(self.get_nombre(),"izq=",l,"der=",r)
 		return(l-r)
-	def _factor_R(self,contador_r,nodo):
-		if(nodo.right is not None):
-			contador_r=contador_r+1
-			return(self._factor_R(contador_r,nodo.right))
-		else:
-			return(contador_r)
-	def _factor_L(self,contador_l,nodo):
-		if(nodo.left is not None):
-			contador_l=contador_l+1
-			return(self._factor_L(contador_l,nodo.left))
-		else:
-			return(contador_l)	
-class Avl:
+class Avl_Tree:
 	def __init__(self):
 		self.root=None
 	def empty(self):
@@ -91,17 +88,26 @@ class Avl:
 		return(False)
 	def get_root(self):
 		return(self.root)
-	def add(self,nombre):
+	def in_order_balanced(self,nodo):
+		if nodo==None:
+			pass
+		else:
+			self.in_order_balanced(nodo.left)
+			nodo._factor()
+			self.in_order_balanced(nodo.right)
+	def add(self,nom,ape,tel,mail):
 		if(self.empty()):
-			nodo=Nodo(nombre)
+			nodo=Nodo_A(nom,ape,tel,mail)
 			self.root=nodo
-			#print("se agrega en la raiz")
 			return(False)
 		else:
-			if(self.find(nombre) is not None):
-				print("contacto existente")
+			if(self.find(ape) is not None):
+				print("c remplaza")
+				self.find.nombre=nom
+				self.find.telefono=tel
+				self.find.mail=mail
 				return("True")
-			self._add(nombre,self.root)
+			self._add(nom,ape,tel,mail,self.root)
 			self.in_order_balanced(self.root)
 			nodo=self.is_balanced(self.root)
 			if(nodo==None):
@@ -116,25 +122,25 @@ class Avl:
 				else:
 					print("error")
 					return(False)
-	def _add(self,nombre,nodo):
-		if(nombre<nodo.get_nombre()):
+	def _add(self,nom,ape,tel,mail,nodo):
+		if(ape<nodo.get_apellido()):
 			if(nodo.left!=None):
-				self._add(nombre,nodo.left)
+				self._add(nom,ape,tel,mail,nodo.left)
 			else:
-				nodo.left=Nodo(nombre)
+				nodo.left=Nodo_A(nom,ape,tel,mail)
 				nodo.left.parent=nodo
 		else:
 			if(nodo.right!=None):
-				self._add(nombre,nodo.right)
+				self._add(nom,ape,tel,mail,nodo.right)
 			else:
-				nodo.right=Nodo(nombre)
+				nodo.right=Nodo_A(nom,ape,tel,mail)
 				nodo.right.parent=nodo
 	def _balanceo(self,nodo):
 		if(nodo==None):
 			return(None)
 		else:
 			factor=nodo.get_factor()
-			if(factor==2 or factor==-2):
+			if(factor>=2 or factor<=-2):
 				#print(factor,nodo.get_nombre())
 				return(nodo)
 			else:
@@ -145,13 +151,20 @@ class Avl:
 		if(b is not None):
 			return(b)		
 		return(None)
-	def in_order_balanced(self,nodo):
-		if nodo==None:
-			pass
+	def is_balanced(self,nodo):
+		if(nodo is None):
+			return None
+		ver=self._balanceo(nodo)
+		if(ver==None):
+			return(None)
 		else:
-			self.in_order_balanced(nodo.left)
-			nodo._factor()
-			self.in_order_balanced(nodo.right)
+			if(ver.right is not None):
+				if(ver.right.get_factor()>=2 or ver.right.get_factor()<=-2):
+					ver=ver.right
+			if(ver.left is not None):
+				if(ver.left.get_factor()>=2 or ver.left.get_factor()<=-2):
+					ver=ver.left
+			return(ver)
 	def _rotacion(self,nodo):
 		if(nodo.get_factor()<0):
 			nodo_right=nodo.right.get_factor()
@@ -169,34 +182,6 @@ class Avl:
 			if(nod_left>0):
 				self.rotacion_R(nodo,nodo.get_parent())
 				return("R")
-	def is_balanced(self,nodo):
-		if(nodo is None):
-			return None
-		ver=self._balanceo(nodo)
-		if(ver==None):
-			return(None)
-		else:
-			if(ver.right is not None):
-				if(ver.right.get_factor()==2 or ver.right.get_factor()==-2):
-					ver=ver.right
-			if(ver.left is not None):
-				if(ver.left.get_factor()==2 or ver.left.get_factor()==-2):
-					ver=ver.left
-			return(ver)
-	def _find(self,nombre,nodo):
-		if(nodo==None):
-			return nodo
-		elif nombre == nodo.get_nombre():
-			return nodo
-		elif nombre<nodo.get_nombre() and nodo.left!=None:
-			return self._find(nombre,nodo.left)
-		elif nombre>nodo.get_nombre() and nodo.right!=None:
-			return self._find(nombre,nodo.right)
-	def find(self,nombre):
-		if self.empty():
-			return None
-		else:
-			return self._find(nombre,self.root)
 	def rotacion_L(self,nodo,parent):
 		#print("rotacion a L desde ", nodo.get_nombre())
 		B=nodo 
@@ -282,11 +267,25 @@ class Avl:
 		C.parent=D
 		self.rotacion_L(B,A)#lo mando a rotacion hacia la izquierda
 		#print("rotacion a RL terminada")
+	def _find(self,apellido,nodo):
+		if(nodo==None):
+			return nodo
+		elif apellido == nodo.get_apellido():
+			return nodo
+		elif apellido<nodo.get_apellido() and nodo.left!=None:
+			return self._find(apellido,nodo.left)
+		elif apellido>nodo.get_apellido() and nodo.right!=None:
+			return self._find(apellido,nodo.right)
+	def find(self,apellido):
+		if self.empty():
+			return None
+		else:
+			return self._find(apellido,self.root)
 	def pre_order(self,nodo):
 		if nodo==None:
 			pass
 		else:
-			print(nodo.get_nombre())
+			print(nodo.get_nombre(),nodo.get_apellido(),)
 			self.pre_order(nodo.left)
 			self.pre_order(nodo.right)
 	def in_order(self,nodo):
@@ -294,7 +293,7 @@ class Avl:
 			pass
 		else:
 			self.in_order(nodo.left)
-			print(nodo.get_nombre())
+			print(nodo.get_nombre(),nodo.get_apellido())
 			self.in_order(nodo.right)
 	def post_order(self,nodo):
 		if nodo==None:
@@ -302,47 +301,64 @@ class Avl:
 		else:
 			self.post_order(nodo.left)
 			self.post_order(nodo.right)
-			print(nodo.get_nombre())
-avl=Avl()
-avl.add(30)
-avl.add(25)
-avl.add(40)
-avl.add(27)
-avl.add(15)
-avl.add(29)
-avl.add(5)
-avl.add(54)
-avl.add(17)
-avl.add(17)
-avl.add(27)
-avl.add(15)
-avl.add(29)
-avl.add(5)
-avl.add(54)
-avl.add(17)
-avl.add(17)
-avl.add(73)
+			print(nodo.get_nombre(),nodo.get_apellido())
+	def delete(self,ape):
+		if self.empty():
+			return(None)
+		if(self.find(ape) is None):
+			return(print("no encontrado"))
+		else:
+			self._delete(self.find(ape))
+			self.in_order_balanced(self.root)
+			nodo=self.is_balanced(self.root)
+			if(nodo==None):
+				return(print("esta balanceado"))
+			else:
+				self._rotacion(nodo)#mando a rotar
+				self.in_order_balanced(self.root)
+				#WHILE(BALANCEADO):
+				ver=self.is_balanced(self.root)
+				if(ver==None):
+					return(print("rebalanceado con exito"))
+				else:
+					return(print("No quedo balanceado"))
+	def _delete(self,node):
+		def min_apellido(nodo):
+			pos=nodo
+			while(pos.left != None):
+				pos=pos.left
+			return (pos)
+		def n_hijos(nodo):
+			n_hijos=0
+			if(nodo.left != None):
+				n_hijos+=1
+			if(nodo.right != None):
+				n_hijos+=1
+			return (n_hijos)
+		node_parent = node.parent
+		node_children = n_hijos(node)
+		if node_children == 0:
+			print("Sin hijos")
+			if node_parent.left == node:
+				node_parent.left = None
+			else:
+				node_parent.right = None
+		if node_children == 1:
+			print("Un hijo")
+			if node.left != None:
+				child = node.left
+			else:
+				child = node.right
+			if node_parent.left == node:
+				node_parent.left = child
+			else:
+				node_parent.right = child
+			child.parent = node_parent
+		if node_children == 2:
+			print("Dos hijos")
+			successor = min_apellido(node.right) #sucesor in order del que sera eliminado 
+			node.nombre = successor.nombre
+			node.apellido = successor.apellido  
+			self._delete(successor)
 
-avl.in_order(avl.get_root())
-bool=avl.find(17)
-if(bool is not None):
-	print("nombre",bool.parent.get_nombre())
-else:
-	print("no encontrado")
-#avl.pre_order(avl.get_root())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(":0")
