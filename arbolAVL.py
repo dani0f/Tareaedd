@@ -100,13 +100,13 @@ class Avl_Tree:
 			nodo=Nodo_A(nom,ape,tel,mail)
 			self.root=nodo
 			return(False)
+		if(self.find(ape) is not None):
+			nod=self.find(ape)
+			nod.nombre=nom
+			nod.telefono=tel
+			nod.mail=mail
+			return("True")
 		else:
-			if(self.find(ape) is not None):
-				print("c remplaza")
-				self.find.nombre=nom
-				self.find.telefono=tel
-				self.find.mail=mail
-				return("True")
 			self._add(nom,ape,tel,mail,self.root)
 			self.in_order_balanced(self.root)
 			nodo=self.is_balanced(self.root)
@@ -305,23 +305,26 @@ class Avl_Tree:
 	def delete(self,ape):
 		if self.empty():
 			return(None)
-		if(self.find(ape) is None):
+		nod=self.find(ape)
+		if(nod==self.root and nod.es_hoja()):
+			self.root=None
+			return(print("eliminado completamente"))
+		if(nod is None):
 			return(print("no encontrado"))
 		else:
 			self._delete(self.find(ape))
 			self.in_order_balanced(self.root)
 			nodo=self.is_balanced(self.root)
 			if(nodo==None):
-				return(print("esta balanceado"))
+				return(print("eliminado y balanceado"))
 			else:
 				self._rotacion(nodo)#mando a rotar
 				self.in_order_balanced(self.root)
-				#WHILE(BALANCEADO):
 				ver=self.is_balanced(self.root)
 				if(ver==None):
-					return(print("rebalanceado con exito"))
+					return(print("eliminado y rebalanceado"))
 				else:
-					return(print("No quedo balanceado"))
+					return(print("eliminado no balanceado"))
 	def _delete(self,node):
 		def min_apellido(nodo):
 			pos=nodo
@@ -337,6 +340,9 @@ class Avl_Tree:
 			return (n_hijos)
 		node_parent = node.parent
 		node_children = n_hijos(node)
+		if(node_parent is None):
+			print("no tiene padre :c")
+			return
 		if node_children == 0:
 			print("Sin hijos")
 			if node_parent.left == node:
@@ -360,5 +366,10 @@ class Avl_Tree:
 			node.nombre = successor.nombre
 			node.apellido = successor.apellido  
 			self._delete(successor)
-
-print(":0")
+	def print_contact(self,apellido):
+		nod=self.find(apellido)
+		if(nod == None):
+			return(print("contacto inexistente"))
+		else:
+			return(print(nod.get_nombre(),nod.get_apellido(),nod.get_telefono(),nod.get_mail()))
+#print("Nodo_A y AVL_Tree importado")
