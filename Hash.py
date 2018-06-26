@@ -4,11 +4,13 @@ class Hash:
   def __init__(self,size):
     self.list = [None]*size
     self.size= size
+    self.arr=[]
   def str2num(self,key):
     return sum([ord(c) for c in key])
   def hashstr(self,key,size):
     return self.str2num(key)%size
   def put(self,nom,ape,tel,mail):
+    self.arr.append(ape)
     pos = self.hashstr(ape,self.size)
     if self.list[pos] is not None:
       #Si existe esa cola solo la agrego ahi
@@ -42,13 +44,13 @@ class Hash:
       else:
         return(False)
   def H_imprimir_todo(self):
-    for i in range(len(self.list)):
-      if(self.list[i] is not None):
-        pos=self.list[i]
-        pos.imprimir_todos()
+    self.arr.sort()
+    for i in range(len(self.arr)):
+      print(self.arr[i])
+    return
 hashi=Hash(100)
-hashi.put("naruto","uzumaki",43242,"mail.com")
-hashi.put("hinata","hyuga",43242,"mail.com")
-hashi.put("sasuke","uchiha",43242,"mail.com")
+hashi.put("marlin","lenzi",43242,"mail.com")
+hashi.put("romina","urrutia",43242,"mail.com")
+hashi.put("levi","leni",43242,"mail.com")
 hashi.H_imprimir_todo()
 #print("Hash importado")
