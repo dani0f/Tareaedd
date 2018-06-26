@@ -1,81 +1,87 @@
 class Nodo_ab:
 	def __init__(self,nom,ape,tel,mail):
-		self.nom=nom
-		self.ape=ape
-		self.tel=tel
+		self.nombre=nom
+		self.apellido=ape
+		self.telefono=tel
 		self.mail=mail
 		self.right=None
 		self.left=None
 		self.parent=None
 	def get_parent(self):
 		return(self.parent)
-	def get_nom(self):
-		return(self.nom)
-	def get_ape(self):
-		return(self.ape)
-	def get_tel(self):
-		return(self.tel)
+	def get_nombre(self):
+		return(self.nombre)
+	def get_apellido(self):
+		return(self.apellido)
+	def get_telefono(self):
+		return(self.telefono)
 	def get_mail(self):
 		return(self.mail)
-	def get_nombre(self):
-		nombre=self.get_nom()+self.get_ape()
-		return(nombre)
+	def es_hoja(self):
+		if(self.left is None and self.right is None):
+			return(True)
+		else:
+			return(False)
 class Arbol_b():
 	def __init__(self):
 		self.root=None
+
 	def empty(self):
 		if(self.root is None):
 			return(True)
 		return(False)
 	def get_root(self):
 		return(self.root)
-	def add(self,nom,ape,tel,mail,nodo):
-		nombre=nom+ape
-		if(nombre<nodo.get_nombre()):
+	def _add(self,nom,ape,tel,mail,nodo):
+		if(ape<nodo.get_apellido()):
 			if(nodo.left!=None):
-				self.add(nom,ape,tel,mail,nodo.left)
+				self._add(nom,ape,tel,mail,nodo.left)
 			else:
 				nodo.left=Nodo_ab(nom,ape,tel,mail)
 				nodo.left.parent=nodo
 		else:
 			if(nodo.right!=None):
-				self.add(nom,ape,tel,mail,nodo.right)
+				self._add(nom,ape,tel,mail,nodo.right)
 			else:
 				nodo.right=Nodo_ab(nom,ape,tel,mail)
 				nodo.right.parent=nodo
-	def add_1(self,nom,ape,tel,mail):
+	def add(self,nom,ape,tel,mail):
 		if(self.root is None):
 			nodo=Nodo_ab(nom,ape,tel,mail)
 			self.root=nodo
+		if(self.find(ape) is not None):
+			nod=self.find(ape)
+			nod.nombre=nom
+			nod.telefono=tel
+			nod.mail=mail
 		else:	
-			self.add(nom,ape,tel,mail,self.root)
-	def _find(self,nom,ape,nodo):
-		nombre=nom+ape
+			self._add(nom,ape,tel,mail,self.root)
+	def _find(self,ape,nodo):
 		if(nodo==None):
 			return nodo
-		elif nombre == nodo.get_nombre():
+		elif ape == nodo.get_apellido():
 			return nodo
-		elif nombre<nodo.get_nombre() and nodo.left!=None:
-			return self._find(nom,ape,nodo.left)
-		elif nombre>nodo.get_nombre() and nodo.right!=None:
-			return self._find(nom,ape,nodo.right)
-	def find(self,nom,ape):
+		elif ape<nodo.get_apellido() and nodo.left!=None:
+			return self._find(ape,nodo.left)
+		elif ape>nodo.get_apellido() and nodo.right!=None:
+			return self._find(ape,nodo.right)
+	def find(self,ape):
 		if self.empty():
 			return None
 		else:
-			return self._find(nom,ape,self.root)
-	def in_order(self, nodo):
+			return self._find(ape,self.root)
+	def in_order(self,nodo):
 		if nodo==None:
 			pass
 		else:
 			self.in_order(nodo.left)
-			print(nodo.get_nom(),nodo.get_ape(),nodo.get_tel(),nodo.get_mail())
+			print(nodo.get_nombre(),nodo.get_apellido(),nodo.get_telefono(),nodo.get_mail())
 			self.in_order(nodo.right)
 	def pre_order(self,nodo):
 		if nodo==None:
 			pass
 		else:
-			print(nodo.get_nom(),nodo.get_ape(),nodo.get_tel(),nodo.get_mail())
+			print(nodo.get_nombre(),nodo.get_apellido(),nodo.get_telefono(),nodo.get_mail())
 			self.pre_order(nodo.left)
 			self.pre_order(nodo.right)
 	def pos_order(self,nodo):
@@ -84,24 +90,26 @@ class Arbol_b():
 		else:
 			self.pos_order(nodo.left)
 			self.pos_order(nodo.right)
-			print(nodo.get_nom(),nodo.get_ape(),nodo.get_tel(),nodo.get_mail())
-
-	def print_contacto(self,nom,ape):
-		con=self.find(nom,ape)
+			print(nodo.get_nombre(),nodo.get_apellido(),nodo.get_telefono(),nodo.get_mail())
+	def print_contact(self,ape):
+		con=self.find(ape)
 		if(con is None):
-			print("contacto inexistente")
-			return(False)
+			return(print("contacto inexistente"))
 		else:
-			print(con.get_nom(),con.get_ape(),con.get_tel(),con.get_mail())
-			return(True)
-
-	def delete(self,nom,ape):
+			print("*contacto encontrado*")
+			return(print(con.get_nombre(),con.get_apellido(),con.get_telefono(),con.get_mail()))
+	def delete(self,ape):
 		if self.empty():
 			return(None)
+		nod=self.find(ape)	
+		if(nod is None):
+			return(print("inexistente"))
+		elif(nod == self.root and nod.es_hoja()):
+			self.root=None
 		else:
-			return self._delete(self.find(nom,ape))
+			return self._delete(self.find(ape))
 	def _delete(self,node):
-		def min_nombre(nodo):
+		def min_apellido(nodo):
 			pos=nodo
 			while(pos.left != None):
 				pos=pos.left
@@ -115,6 +123,9 @@ class Arbol_b():
 			return (n_hijos)
 		node_parent = node.parent
 		node_children = n_hijos(node)
+		if(node_parent is None):
+			print("no tiene padre :C")
+			return
 		if node_children == 0:
 			print("Sin hijos")
 			if node_parent.left == node:
@@ -134,22 +145,8 @@ class Arbol_b():
 			child.parent = node_parent
 		if node_children == 2:
 			print("Dos hijos")
-			successor = min_nombre(node.right) #sucesor in order del que sera eliminado 
-			node.nom = successor.nom
-			node.ape = successor.ape  
+			successor = min_apellido(node.right) #sucesor in order del que sera eliminado 
+			node.nombre = successor.nombre
+			node.apellido = successor.apellido  
 			self._delete(successor)
-arbol=Arbol_b()
-arbol.add_1("d","moreno",78743,"dani@mail.com")
-arbol.add_1("a","moreno",75432,"dasdi@mail.com")
-arbol.add_1("n","moreno",7543,"dasdi@mail.com")
-arbol.add_1("i","moreno",787323,"dafdi@mail.com")
-arbol.in_order(arbol.get_root())
-print("-------------------------")
-#arbol.pre_order(arbol.get_root())
-#print("-------------------------")
-#arbol.pos_order(arbol.get_root())
-#retorno=(arbol.find("d","moreno"))
-#arbol.print_contacto("d","moreno")
-arbol.delete("d","moreno")
-arbol.delete("a","moreno")
-arbol.in_order(arbol.get_root())
+#print("Nodo_ab y Arbol_b importado")
