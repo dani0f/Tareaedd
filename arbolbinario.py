@@ -94,7 +94,7 @@ class Arbol_b():
 	def print_contact(self,ape):
 		con=self.find(ape)
 		if(con is None):
-			return(print("contacto inexistente"))
+			return(print("*contacto inexistente"))
 		else:
 			print("*contacto encontrado*")
 			return(print(con.get_nombre(),con.get_apellido(),con.get_telefono(),con.get_mail()))
@@ -149,4 +149,4 @@ class Arbol_b():
 			node.nombre = successor.nombre
 			node.apellido = successor.apellido  
 			self._delete(successor)
-#print("Nodo_ab y Arbol_b importado")
+
