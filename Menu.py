@@ -1,3 +1,5 @@
+from Arbol2_3 import Node
+from Arbol2_3 import Tree
 from listadoble import Nodo
 from listadoble import Lista_s
 from arbolbinario import Nodo_ab
@@ -12,20 +14,22 @@ class Estructuras:
 		self.avl=Avl_Tree()
 		self.hash=Hash(100)
 	def menu_list(self,opcion):
-		if(opcion==1):#agregar contacto
-			agregar_nom()
-			self.list._insertar("naruto","uzumaki",43242,"mail.com")
-			self.list._insertar("hinata","hyuga",43242,"mail.com")
-			self.list._insertar("sasuke","uchiha",43242,"mail.com")
+		if(opcion==1):
+			nombre,apellido,telefono,mail=agregar_datos()
+			self.list._insertar(nombre,apellido,telefono,mail)
 			return(False)
 		if(opcion==2):
 			print("---eliminar contacto--------------")
-			self.list.eliminar("uzumaki")
+			print("ingrese apellido:")
+			ape=input()
+			self.list.eliminar(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==3):
 			print("---imprimir contacto--------------")
-			self.list.imprimir_contacto("hyuga")
+			print("ingrese apellido:")
+			ape=input()
+			self.list.imprimir_contacto(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==4):
@@ -38,23 +42,56 @@ class Estructuras:
 			print("saliendo de lista enlazada")
 			print("----------------------------------")
 			return(True)
-	def menu_abb(self,opcion):
+	def menu_2_3(self,opcion):
 		if(opcion==1):#agregar contacto
 			print("---agregar contacto---------------")
-			agregar_nom()
-			self.abb.add("naruto","uzumaki",43242,"mail.com")
-			self.abb.add("hinata","hyuga",43242,"mail.com")
-			self.abb.add("sasuke","uchiha",43242,"mail.com")
+			nombre,apellido,telefono,mail=agregar_datos()
+			self.arbol_23.insertar(nombre,apellido,telefono,mail)
 			print("----------------------------------")
 			return(False)
 		if(opcion==2):
 			print("---eliminar contacto--------------")
-			self.abb.delete("uchiha")
+			print("ingrese apellido:")
+			ape=input()
+			self.arbol_23.remove(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==3):
 			print("---imprimir contacto--------------")
-			self.abb.print_contact("hyuga")
+			print("ingrese apellido:")
+			ape=input()
+			self.arbol_23.mostrar_contacto(ape)
+			print("----------------------------------")
+			return(False)
+		if(opcion==4):
+			print("---Mostrando Lista de contactos---")
+			self.arbol_23.mostrar_todos()
+			print("----------------------------------")
+			return(False)
+		if(opcion==5):
+			print("---exit---------------------------")
+			print("saliendo de Arbol 2-3")
+			print("----------------------------------")
+			return(True)
+	def menu_abb(self,opcion):
+		if(opcion==1):
+			print("---agregar contacto---------------")
+			nombre,apellido,telefono,mail=agregar_datos()
+			self.abb.add(nombre,apellido,telefono,mail)
+			print("----------------------------------")
+			return(False)
+		if(opcion==2):
+			print("---eliminar contacto--------------")
+			print("ingrese apellido:")
+			ape=input()
+			self.abb.delete(ape)
+			print("----------------------------------")
+			return(False)
+		if(opcion==3):
+			print("---imprimir contacto--------------")
+			print("ingrese apellido:")
+			ape=input()
+			self.abb.print_contact(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==4):
@@ -70,20 +107,22 @@ class Estructuras:
 	def menu_avl(self,opcion):
 		if(opcion==1):#agregar contacto
 			print("---agregar contacto---------------")
-			agregar_nom()
-			self.avl.add("naruto","uzumaki",43242,"mail.com")
-			self.avl.add("hinata","hyuga",43242,"mail.com")
-			self.avl.add("sasuke","uchiha",43242,"mail.com")
+			nombre,apellido,telefono,mail=agregar_datos()
+			self.avl.add(nombre,apellido,telefono,mail)
 			print("----------------------------------")
 			return(False)
 		if(opcion==2):
 			print("---eliminar contacto--------------")
-			self.avl.delete("uzumaki")
+			print("ingrese apellido:")
+			ape=input()
+			self.avl.delete(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==3):
 			print("---imprimir contacto--------------")
-			self.avl.print_contact("hyuga")
+			print("ingrese apellido:")
+			ape=input()
+			self.avl.print_contact(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==4):
@@ -97,22 +136,24 @@ class Estructuras:
 			print("----------------------------------")
 			return(True)	
 	def menu_hash(self,opcion):
-		if(opcion==1):#agregar contacto
+		if(opcion==1):
 			print("---agregar contacto---------------")
-			agregar_nom()
-			self.hash.put("naruto","uzumaki",43242,"mail.com")
-			self.hash.put("hinata","hyuga",43242,"mail.com")
-			self.hash.put("sasuke","uchiha",43242,"mail.com")
+			nombre,apellido,telefono,mail=agregar_datos()
+			self.hash.put(nombre,apellido,telefono,mail)
 			print("----------------------------------")
 			return(False)
 		if(opcion==2):
 			print("---eliminar contacto--------------")
-			self.hash.H_eliminar("uzumaki")
+			print("ingrese apellido:")
+			ape=input()
+			self.hash.H_eliminar(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==3):
 			print("---imprimir contacto--------------")
-			self.hash.H_imprimir_contacto("hyuga")
+			print("ingrese apellido:")
+			ape=input()
+			self.hash.H_imprimir_contacto(ape)
 			print("----------------------------------")
 			return(False)
 		if(opcion==4):
@@ -130,76 +171,68 @@ def menu():
 	print(" 2 para eliminar contactos")
 	print(" 3 para mostrar contacto")
 	print(" 4 para mostrar lista de contactos")
-def agregar_nom():
-	print("ingrese nombre:--aqui hay un imput--")
-	return
-def agregar_ape():
+	print(" 5 para salir")
+def agregar_datos():
+	print("ingrese nombre:")
+	nom=input()
 	print("ingrese apellido:")
-	return()
-def agregar_tel():
+	ape=input()
 	print("ingrese telefono:")
-	return()
-def agregar_mail():
+	tel=input()
 	print("ingrese e-mail:")
-	return()
+	mail=input()
+	return(nom,ape,tel,mail)
 def segundo_menu(opcion):
 	system=Estructuras()
 	exit=False
 	if(opcion==1):
- 		print("Lista doblemente enlazada:")
- 		while(exit==False):
+		print("Lista doblemente enlazada:")
+		while(exit==False):
  			menu()
- 			op=1
- 			system.menu_list(op)
- 			exit=system.menu_list(5)
- 		return(False)
+ 			opcion=int(input())
+ 			exit=system.menu_list(opcion)
 	if(opcion==2):
- 		print("Arbol binario")
- 		while(exit==False):
+		print("Arbol binario")
+		while(exit==False):
  			menu()
- 			op=1
- 			system.menu_abb(op)
- 			exit=system.menu_abb(5)
- 		return(False)
+ 			opcion=int(input())
+ 			exit=system.menu_abb(opcion)
 	if(opcion==3):
- 		print("Arbol avl")
- 		while(exit==False):
+		print("Arbol avl")
+		while(exit==False):
  			menu()
- 			op=1
- 			system.menu_abb(op)
- 			exit=system.menu_abb(5)
- 		return(False)
+ 			opcion=int(input())
+ 			exit=system.menu_abb(opcion)
 	if(opcion==4):
  		print("Arbol 2-3")
  		while(exit==False):
  			menu()
- 			op=1
- 			system.menu_abb(op)
- 			exit=system.menu_abb(5)
- 		return(False)
+ 			opcion=int(input())
+ 			exit=system.menu_abb(opcion)
 	if(opcion==5):
- 		print("Hash")
- 		while(exit==False):
+		print("Hash")
+		while(exit==False):
  			menu()
- 			op=1
- 			system.menu_abb(op)
- 			exit=system.menu_abb(5)
- 		return(False)
+ 			opcion=int(input())
+ 			exit=system.menu_hash(opcion)
 	if(opcion==6):
 		print("---saliendo al menu principal---")
 		return(True)
-def menu_principal():
-	exit=False
-	while(exit==False):
-		print("Lista de contactos")
-		print("¿que estructura desea ocupar para guardar sus contactos?")
-		print("1- Lista doblemente enlazada")
-		print("2- Arbol binario")
-		print("3- Arbol avl")
-		print("4- Arbol 2-3")
-		print("5- Hash")
-		exit=segundo_menu(2)
-		exit=segundo_menu(6)
-	return(print("!!!!!!finalizar programa!!!!!"))
-menu_principal()
-
+	return(False)
+#------------------------------------------------------------------------
+exit=False
+while(exit==False):
+	print("--------------------------------------------------------")
+	print("Lista de contactos")
+	print("--------------------------------------------------------")
+	print("¿que estructura desea ocupar para guardar sus contactos?")
+	print("1- Lista doblemente enlazada")
+	print("2- Arbol binario")
+	print("3- Arbol avl")
+	print("4- Arbol 2-3")
+	print("5- Hash")
+	print("6- salir")
+	opcion=int(input())
+	print(":::::::::opcion::::::::::",opcion)
+	exit=segundo_menu(opcion)
+	print("!!!!!!finalizar programa!!!!!")
