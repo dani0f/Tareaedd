@@ -1,3 +1,4 @@
+from time import time
 from faker import Faker
 class Nodo:
   def __init__(self,nom,ape,tel,mail):
@@ -128,12 +129,19 @@ class Lista_s:
   		print("contacto encontrado:")
   		return(print(nod.get_nom(),nod.get_ape(),nod.get_tel(),nod.get_mail()))
 
-fake=Faker()
-lista=Lista_s()
-for i in range(100):
-	nombre=fake.first_name()
-	apellido=fake.last_name()
-	telefono=fake.phone_number()
-	mail=fake.email()
-	lista._insertar(nombre.lower(),apellido.lower(),telefono,mail)
-lista.imprimir_todos()
+# fake=Faker()
+# lista=Lista_s()
+# array=list()
+# for i in range(1000):
+#   	nombre=fake.first_name()
+#   	apellido=fake.last_name()
+#   	telefono=fake.phone_number()
+#   	mail=fake.email()
+#   	lista._insertar(nombre.lower(),apellido.lower(),telefono,mail)
+#   	array.append(apellido.lower())
+# inicio=time()
+# for p in range(10):
+#   apellido=array[p]
+#   lista.eliminar(apellido)
+# final=time()
+# print(final-inicio)
