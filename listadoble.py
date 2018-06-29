@@ -1,3 +1,4 @@
+from faker import Faker
 class Nodo:
   def __init__(self,nom,ape,tel,mail):
     self.nom=nom
@@ -30,11 +31,14 @@ class Lista_s:
     if(self.head is None):
       self.head=self.last=nodo
       return("agregado caso 1")
+    if(self.buscar(ape) is not None):
+    	pos=self.buscar(ape)
+    	pos.nom=nom
+    	pos.tel=tel
+    	pos.mail=mail
+    	self.cout=self.cout-1
     else:
       pos=self.head
-      if(pos.next is None and ape==pos.get_ape()):
-        self.head=self.last=nodo
-        return("agregado caso csao")
       if(pos.next is None and ape<pos.get_ape()):#se agrega antes de pos
         nodo.next=pos
         pos.prev=nodo
@@ -48,11 +52,6 @@ class Lista_s:
         self.last=nodo
         return("agregado caso 2.2")
       while(pos.next is not None):
-        if(ape==pos.get_ape()):
-          pos.prev.next=nodo
-          nodo.prev=pos.prev
-          nodo.next=pos.next
-          pos.next.prev=nodo
         if(ape<pos.get_ape()):#se agrega antes de pos
           if(pos.prev is None):
             nodo.next=pos
@@ -65,7 +64,6 @@ class Lista_s:
             nodo.next=pos
             pos.prev=nodo
             return("agregado a caso 3.1") 
-        posprev=pos 
         pos=pos.next
       #se agrega despues de pos y el last cambia
       pos.next=nodo
@@ -115,12 +113,12 @@ class Lista_s:
       return("La lista esta vacia")
     pos=self.head
     if(pos.next is None):
-      print("Nombre: ",pos.get_nom(),pos.get_ape())
+      print("Nombre: ",pos.get_nom(),pos.get_ape(),pos.get_tel(),pos.get_mail())
       return
     while(pos.next is not None):
-      print("Nombre: ",pos.get_nom(),pos.get_ape())
+      print("Nombre: ",pos.get_nom(),pos.get_ape(),pos.get_tel(),pos.get_mail())
       pos=pos.next
-    print("Nombre: ",pos.get_nom(),pos.get_ape())
+    print("Nombre: ",pos.get_nom(),pos.get_ape(),pos.get_tel(),pos.get_mail())
     return
   def imprimir_contacto(self,apellido):
   	nod=self.buscar(apellido)
@@ -129,4 +127,13 @@ class Lista_s:
   	else:
   		print("contacto encontrado:")
   		return(print(nod.get_nom(),nod.get_ape(),nod.get_tel(),nod.get_mail()))
-#print("Nodo_l y Lista doble importada")
+
+fake=Faker()
+lista=Lista_s()
+for i in range(100):
+	nombre=fake.first_name()
+	apellido=fake.last_name()
+	telefono=fake.phone_number()
+	mail=fake.email()
+	lista._insertar(nombre.lower(),apellido.lower(),telefono,mail)
+lista.imprimir_todos()
