@@ -1,3 +1,5 @@
+from faker import Faker
+from time import time
 class Nodo_A:
 	def __init__(self,nom,ape,tel,mail):
 		self.nombre=nom
@@ -116,12 +118,6 @@ class Avl_Tree:
 				self._rotacion(nodo)#mando a rotar
 				self.in_order_balanced(self.root)
 				ver=self.is_balanced(self.root)
-				if(ver==None):
-					print("rebalanceado con exito")
-					return(True)
-				else:
-					print("error")
-					return(False)
 	def _add(self,nom,ape,tel,mail,nodo):
 		if(ape<nodo.get_apellido()):
 			if(nodo.left!=None):
@@ -129,7 +125,7 @@ class Avl_Tree:
 			else:
 				nodo.left=Nodo_A(nom,ape,tel,mail)
 				nodo.left.parent=nodo
-		else:
+		if(ape>nodo.get_apellido()):
 			if(nodo.right!=None):
 				self._add(nom,ape,tel,mail,nodo.right)
 			else:
@@ -141,7 +137,6 @@ class Avl_Tree:
 		else:
 			factor=nodo.get_factor()
 			if(factor>=2 or factor<=-2):
-				#print(factor,nodo.get_nombre())
 				return(nodo)
 			else:
 				a=self._balanceo(nodo.left)
@@ -192,27 +187,22 @@ class Avl_Tree:
 		if(A is None):
 		#	print("se cambia la raiz")	
 			D1=C.left
-			
 			C.left=B
 			B.right=D1
 			self.root=C
 			C.parent=None
 			B.parent=C
 			if(D1 is not None):
-		#		print("--con hijos")
 				D1.parent=B	
 			return
 		C.left=B	
-		#caso 1 p.factor<0 
 		if(A.get_factor()<0):
-			A.right=C
-		#caso 2 p.factor>0 
+			A.right=C 
 		if(A.get_factor()>0):
 			A.left=C
 		C.parent=A
 		B.parent=C
 	def rotacion_R(self,nodo,parent):
-		#print("rotacion a R desde ", nodo.get_nombre())
 		B=nodo 
 		A=parent
 		C=B.left
@@ -227,18 +217,13 @@ class Avl_Tree:
 			C.parent=None
 			B.parent=C
 			if(D1 is not None):
-			#	print("--con hijos")
 				D1.parent=B
 			return
-		C.right=B	
-		#caso 1 p.factor<0 
+		C.right=B	 
 		if(A.get_factor()<0):
-			A.right=C
-			#print("caso 1")
-		#caso 2 p.factor>0 
+			A.right=C 
 		if(A.get_factor()>0):
 			A.left=C
-			#print("caso 2")
 		C.parent=A
 		B.parent=C
 	def rotacion_LR(self,nodo,parent):
@@ -306,9 +291,6 @@ class Avl_Tree:
 		if self.empty():
 			return(None)
 		nod=self.find(ape)
-		if(nod==self.root and nod.es_hoja()):
-			self.root=None
-			return(print("eliminado completamente"))
 		if(nod is None):
 			return(print("no encontrado"))
 		else:
@@ -316,16 +298,21 @@ class Avl_Tree:
 			self.in_order_balanced(self.root)
 			nodo=self.is_balanced(self.root)
 			if(nodo==None):
-				return(print("eliminado y balanceado"))
+				return("eliminado sin tener que balancear")
 			else:
 				self._rotacion(nodo)#mando a rotar
 				self.in_order_balanced(self.root)
 				ver=self.is_balanced(self.root)
 				if(ver==None):
-					return(print("eliminado y rebalanceado"))
+					return("eliminado y rebalanceado")
 				else:
-					return(print("eliminado no balanceado"))
+					return("eliminado no balanceado")
 	def _delete(self,node):
+		def max_apellido(nodo):
+			pos=nodo
+			while(pos.right != None):
+				pos=pos.right
+			return (pos)
 		def min_apellido(nodo):
 			pos=nodo
 			while(pos.left != None):
@@ -340,17 +327,52 @@ class Avl_Tree:
 			return (n_hijos)
 		node_parent = node.parent
 		node_children = n_hijos(node)
-		if(node_parent is None):
-			print("no tiene padre :c")
-			return
 		if node_children == 0:
-			print("Sin hijos")
+			#print("Sin hijos")
+			if(node_parent is None):#raiz sin hijos
+				#print("eliminando raiz")
+				self.root=None
+				return
 			if node_parent.left == node:
 				node_parent.left = None
 			else:
 				node_parent.right = None
 		if node_children == 1:
-			print("Un hijo")
+			#print("Un hijo")
+			if(node_parent is None and node.right != None):#raiz con 1 hijo
+				#print("no tiene padre eliminando raiz")
+				der=self.root.right
+				izq=None
+				nueva_raiz=min_apellido(node.right)
+				if(der==nueva_raiz):
+					nueva_raiz.right=der.right
+					nueva_raiz.left=None
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				else:
+					nueva_raiz.parent.left=None
+					nueva_raiz.right=der
+					nueva_raiz.left=izq
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				return
+			if(node_parent is None and node.left != None):#raiz con 1 hijo
+				#print("no tiene padre eliminando raiz")
+				izq=self.root.left
+				der=None
+				nueva_raiz=max_apellido(node.left)
+				if(izq==nueva_raiz):
+					nueva_raiz.left=izq.left
+					nueva_raiz.right=izq.right
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				else:
+					nueva_raiz.parent.right=None
+					nueva_raiz.left=izq
+					nueva_raiz.right=der
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				return
 			if node.left != None:
 				child = node.left
 			else:
@@ -361,7 +383,25 @@ class Avl_Tree:
 				node_parent.right = child
 			child.parent = node_parent
 		if node_children == 2:
-			print("Dos hijos")
+			#print("Dos hijos")
+			if(node_parent is None and node.right != None):#raiz con 1 hijo
+				#print("no tiene padre eliminando raiz")
+				nueva_raiz=min_apellido(node.right)
+				der=self.root.right
+				izq=self.root.left
+				nueva_raiz=min_apellido(node.right)
+				if(der==nueva_raiz):
+					nueva_raiz.right=der.right
+					nueva_raiz.left=izq
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				else:
+					nueva_raiz.parent.left=None
+					nueva_raiz.right=der
+					nueva_raiz.left=izq
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				return()
 			successor = min_apellido(node.right) #sucesor in order del que sera eliminado 
 			node.nombre = successor.nombre
 			node.apellido = successor.apellido  
@@ -372,4 +412,19 @@ class Avl_Tree:
 			return(print("contacto inexistente"))
 		else:
 			return(print(nod.get_nombre(),nod.get_apellido(),nod.get_telefono(),nod.get_mail()))
-#print("Nodo_A y AVL_Tree importado")
+# arbol_avl=Avl_Tree()
+# fake=Faker()
+# array=list()
+# for i in range(20):
+# 	nombre=fake.first_name()
+# 	apellido=fake.last_name()
+# 	telefono=fake.phone_number()
+# 	mail=fake.email()
+# 	arbol_avl.add(nombre.lower(),apellido.lower(),telefono,mail)
+# 	array.append(apellido.lower())
+# inicio=time()
+# for p in range(20):
+#   apellido=array[p]
+#   arbol_avl.delete(apellido)
+# final=time()
+# print(final-inicio)
