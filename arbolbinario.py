@@ -1,3 +1,5 @@
+from faker import Faker
+from time import time
 class Nodo_ab:
 	def __init__(self,nom,ape,tel,mail):
 		self.nombre=nom
@@ -104,11 +106,14 @@ class Arbol_b():
 		nod=self.find(ape)	
 		if(nod is None):
 			return(print("inexistente"))
-		elif(nod == self.root and nod.es_hoja()):
-			self.root=None
 		else:
 			return self._delete(self.find(ape))
 	def _delete(self,node):
+		def max_apellido(nodo):
+			pos=nodo
+			while(pos.right != None):
+				pos=pos.right
+			return (pos)
 		def min_apellido(nodo):
 			pos=nodo
 			while(pos.left != None):
@@ -123,17 +128,47 @@ class Arbol_b():
 			return (n_hijos)
 		node_parent = node.parent
 		node_children = n_hijos(node)
-		if(node_parent is None):
-			print("no tiene padre :C")
-			return
 		if node_children == 0:
-			print("Sin hijos")
+			if(node_parent is None):#raiz sin hijos
+				self.root=None
+				return
 			if node_parent.left == node:
 				node_parent.left = None
 			else:
 				node_parent.right = None
 		if node_children == 1:
-			print("Un hijo")
+			if(node_parent is None and node.right != None):#raiz con 1 hijo
+				der=self.root.right
+				izq=None
+				nueva_raiz=min_apellido(node.right)
+				if(der==nueva_raiz):
+					nueva_raiz.right=der.right
+					nueva_raiz.left=None
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				else:
+					nueva_raiz.parent.left=None
+					nueva_raiz.right=der
+					nueva_raiz.left=izq
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				return
+			if(node_parent is None and node.left != None):#raiz con 1 hijo
+				izq=self.root.left
+				der=None
+				nueva_raiz=max_apellido(node.left)
+				if(izq==nueva_raiz):
+					nueva_raiz.left=izq.left
+					nueva_raiz.right=izq.right
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				else:
+					nueva_raiz.parent.right=None
+					nueva_raiz.left=izq
+					nueva_raiz.right=der
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				return
 			if node.left != None:
 				child = node.left
 			else:
@@ -144,9 +179,41 @@ class Arbol_b():
 				node_parent.right = child
 			child.parent = node_parent
 		if node_children == 2:
-			print("Dos hijos")
+			if(node_parent is None and node.right != None):#raiz con 1 hijo
+				nueva_raiz=min_apellido(node.right)
+				der=self.root.right
+				izq=self.root.left
+				nueva_raiz=min_apellido(node.right)
+				if(der==nueva_raiz):
+					nueva_raiz.right=der.right
+					nueva_raiz.left=izq
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				else:
+					nueva_raiz.parent.left=None
+					nueva_raiz.right=der
+					nueva_raiz.left=izq
+					nueva_raiz.parent=None
+					self.root=nueva_raiz
+				return
 			successor = min_apellido(node.right) #sucesor in order del que sera eliminado 
 			node.nombre = successor.nombre
 			node.apellido = successor.apellido  
 			self._delete(successor)
-
+# arbol=Arbol_b()
+# fake=Faker()
+# inicio=time()
+# array=list()
+# for i in range(100):
+# 	nombre=fake.first_name()
+# 	apellido=fake.last_name()
+# 	telefono=fake.phone_number()
+# 	mail=fake.email()
+# 	arbol.add(nombre.lower(),apellido.lower(),telefono,mail)
+# 	array.append(apellido.lower())
+# inicio=time()
+# for p in range(100):
+#   apellido=array[p]
+#   arbol.find(apellido)
+# final=time()
+# print(final-inicio)
